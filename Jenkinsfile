@@ -33,14 +33,14 @@ pipeline{
                 }    
             }
         }
-/*        stage('Checkout Ansible Playbooks'){
-            steps{
-                checkout scmGit(branches: [[name: '*/main']],
-                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'AnsiblePlaybooks']],
-                userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/DevOps-Ansible_Project1.git']])
-            }
-        }
-        stage('Deploy Ansible Playbook'){
+//        stage('Checkout Ansible Playbooks'){
+//            steps{
+//               checkout scmGit(branches: [[name: '*/main']],
+//                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'AnsiblePlaybooks']],
+//                userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/DevOps-Ansible_Project1.git']])
+//            }
+//        }
+/*        stage('Deploy Ansible Playbook'){
             steps{
                 script{
                     // retry at least 5 times as the EC2 instances could be still loading.
@@ -62,6 +62,6 @@ pipeline{
                     }
                 }
             }
-        }
-    }*/
+        }*/
+    }
 }
