@@ -1,64 +1,67 @@
-node{
-    
-    def mavenHome, mavenCMD, docker, tag, dockerHubUser, containerName, httpPort = ""
-    
-    stage('Prepare Environment'){
-        echo 'Initialize Environment'
-        mavenHome = tool name: 'maven' , type: 'maven'
-        mavenCMD = "${mavenHome}/bin/mvn"
-        tag="3.0"
-	dockerHubUser="anujsharma1990"
-	containerName="insure-me"
-	httpPort="8081"
-    }
-    
-    stage('Code Checkout'){
-        try{
-            checkout scm
+pipeline{
+    agent any
+    stages{
+        stage('Checkout files'){
+            steps{
+                checkout scmGit(branches: [[name: '*/test1']],
+                //extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'TerraformLab']],
+                userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/InsuranceManagement.git']])
+            }
         }
-        catch(Exception e){
-            echo 'Exception occured in Git Code Checkout Stage'
-            currentBuild.result = "FAILURE"
-            //emailext body: '''Dear All,
-            //The Jenkins job ${JOB_NAME} has been failed. Request you to please have a look at it immediately by clicking on the below link. 
-            //${BUILD_URL}''', subject: 'Job ${JOB_NAME} ${BUILD_NUMBER} is failed', to: 'jenkins@gmail.com'
+        stage('Terraform Init'){
+            steps{
+                script{
+                    sh 'terraform -chdir=./TerraformInfra init'
+                }
+            }    
         }
-    }
-    
-    stage('Maven Build'){
-        sh "${mavenCMD} clean package"        
-    }
-    
-    stage('Publish Test Reports'){
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-    }
-    
-    stage('Docker Image Build'){
-        echo 'Creating Docker image'
-        sh "docker build -t $dockerHubUser/$containerName:$tag --pull --no-cache ."
-    }
-	
-    stage('Docker Image Scan'){
-        echo 'Scanning Docker image for vulnerbilities'
-        sh "docker build -t ${dockerHubUser}/insure-me:${tag} ."
-    }   
-	
-    stage('Publishing Image to DockerHub'){
-        echo 'Pushing the docker image to DockerHub'
-        withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'dockerUser', passwordVariable: 'dockerPassword')]) {
-			sh "docker login -u $dockerUser -p $dockerPassword"
-			sh "docker push $dockerUser/$containerName:$tag"
-			echo "Image push complete"
-        } 
-    }    
-	
-	stage('Docker Container Deployment'){
-		sh "docker rm $containerName -f"
-		sh "docker pull $dockerHubUser/$containerName:$tag"
-		sh "docker run -d --rm -p $httpPort:$httpPort --name $containerName $dockerHubUser/$containerName:$tag"
-		echo "Application started on port: ${httpPort} (http)"
-	}
+        stage('Terraform Plan'){
+            steps{
+                script{
+                    withAWS(credentials: 'DevOpsLabs', region: 'us-east-1') {
+                        sh 'terraform -chdir=./TerraformInfra plan -var-file="ansiblelab.tfvars"'
+                    }
+                }
+            }
+        }
+        stage('Terraform Apply'){
+            steps{
+                script{
+                    withAWS(credentials: 'DevOpsLabs', region: 'us-east-1'){
+                        sh 'terraform -chdir=./TerraformInfra apply -var-file="ansiblelab.tfvars" -auto-approve'
+                    }
+                }    
+            }
+        }
+/*        stage('Checkout Ansible Playbooks'){
+            steps{
+                checkout scmGit(branches: [[name: '*/main']],
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'AnsiblePlaybooks']],
+                userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/DevOps-Ansible_Project1.git']])
+            }
+        }
+        stage('Deploy Ansible Playbook'){
+            steps{
+                script{
+                    // retry at least 5 times as the EC2 instances could be still loading.
+                    retry(5){
+                    
+                        // Change to the directory where the ansible playbooks are located.
+                        dir('./AnsiblePlaybooks') {
+                            withAWS(credentials: 'DevOpsLabs') {
+                                ansiblePlaybook credentialsId: 'AnsibleLabUser', installation: 'Ansible-Local', inventory: 'ansiworkers.aws_ec2.yml', playbook: 'CloneAndBuildCode-Playbook.yml'
+                                sh 'echo "This line confirms that the first playbook has been executed"'
+                        
+                                ansiblePlaybook credentialsId: 'AnsibleLabUser', installation: 'Ansible-Local', inventory: 'ansiworkers.aws_ec2.yml', playbook: 'DockerCleanUp-Playbook.yml'
+                                sh 'echo "this line confirms thea the second playbook has been executed"'
+                            
+                                ansiblePlaybook credentialsId: 'AnsibleLabUser', installation: 'Ansible-Local', inventory: 'ansiworkers.aws_ec2.yml', playbook: 'DeployOnDocker-Playbook.yml'
+                                sh 'echo "This line confirms that the third playbook has been executed"'
+                            }
+                        }    
+                    }
+                }
+            }
+        }
+    }*/
 }
-
-
-

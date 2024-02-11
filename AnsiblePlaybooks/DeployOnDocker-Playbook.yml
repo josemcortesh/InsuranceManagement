@@ -1,0 +1,16 @@
+---
+- name: Deploy Code on Docker Containers.
+  hosts: aws_ec2
+  become: true
+
+  tasks:  
+  - name: Pull image from DockerHub
+  - name: Launch Docker container with the image built.
+    community.docker.docker_container:
+      name: insure-me
+      detach: true
+      image: josemcortesh/insure-me
+      published_ports:
+      - "80:8081"
+      state: started   
+...

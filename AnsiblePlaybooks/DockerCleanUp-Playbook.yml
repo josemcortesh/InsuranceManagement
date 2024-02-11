@@ -1,0 +1,30 @@
+---
+- name: Clean previous deployments and images.
+  hosts: aws_ec2
+  become: true
+
+  tasks:
+  - name: Get Docker container info.
+    community.docker.docker_container_info:
+      name: insure-me
+    register: docker_container_facts
+    
+  - name: Get Docker image info.
+    community.docker.docker_host_info:
+      images: yes
+      containers: no
+    register: docker_image_facts
+    
+  - name: Delete Docker containers previously running.
+    community.docker.docker_container:
+      name: insure-me
+      state: absent
+    when: docker_container_facts.exists
+    
+  - name: Delete all images in Docker host.
+    community.docker.docker_image:
+      name: "{{ item }}"
+      state: absent
+      force_absent: yes
+    loop: "{{ docker_image_facts.images | map(attribute='Id') }}"
+...
