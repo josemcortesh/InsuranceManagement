@@ -45,21 +45,21 @@ pipeline{
         }
         stage('Code Compilation'){
             steps{
-            sh 'mvn -V -f source/pom.xml compile | tee ./Code/Logs/compilation.log'
+                sh 'mvn -V -f source/pom.xml compile | tee ./Code/Logs/compilation.log'
                 sh 'echo "The code compilation has been completed'
                 sh 'echo "The output has been collected in the workspace under path Code/Logs/compilation.log"    
             }
         }
         stage('Code Testing'){
             steps{
-            sh 'mvn -V -f source/pom.xml test | tee ./Code/Logs/tests.log'
+                sh 'mvn -V -f source/pom.xml test | tee ./Code/Logs/tests.log'
                 sh 'echo "The code testing has been completed'
                 sh 'echo "The output has been collected in the workspace under path Code/Logs/tests.log"    
             }
         }
         stage('Code Packaging'){
             steps{
-            sh 'mvn -V -f source/pom.xml package | tee ./Code/Logs/package.log'
+                sh 'mvn -V -f source/pom.xml package | tee ./Code/Logs/package.log'
                 sh 'echo "The code packaging has been completed'
                 sh 'echo "The output has been collected in the workspace under path Code/Logs/package.log"    
             }
