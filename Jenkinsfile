@@ -4,13 +4,13 @@ pipeline{
         maven 'Maven Default'
     }
     stages{
-        stage('Checkout Project'){
-            steps{
-                checkout scmGit(branches: [[name: '*/testS3']],
+        //stage('Checkout Project'){
+        //    steps{
+        //        checkout scmGit(branches: [[name: '*/testS3']],
                 //extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'TerraformLab']],
-                userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/InsuranceManagement.git']])
-            }
-        }
+        //        userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/InsuranceManagement.git']])
+        //    }
+        //}
         stage('Terraform Init'){
             steps{
                 script{
