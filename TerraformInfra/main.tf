@@ -1,5 +1,4 @@
 provider "aws" {
-	region = "us-east-1"
 }
 
 resource "aws_security_group" "SG_WORKER"{
@@ -39,7 +38,30 @@ resource "aws_instance" "WorkerEC2" {
 	count = var.quantity
 	ami = var.ami_id
 	instance_type = "t2.micro"
-	key_name = var.keypair	
+	key_name = var.keypair
+	
+	user_data = <<-EOF
+		#!/bin/bash
+		
+		#Install Docker Repo
+		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+		#Update repos
+		sudo apt-get update
+
+		#Install Docker
+		apt-cache policy docker-ce
+		sudo apt install docker-ce -y
+
+		#Start Services
+		sudo systemctl start docker
+
+		#Allow current user (ansiuser) to run docker commands without sudo
+		sudo usermod -aG docker ansiuser
+		su - ansiuser
+	EOF
+
 	tags = {
 		Name = "${var.instance_name}-${count.index}"
 	}
