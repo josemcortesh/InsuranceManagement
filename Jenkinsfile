@@ -11,10 +11,12 @@ pipeline{
                 userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/InsuranceManagement.git']])
             }
         }
-/*        stage('Terraform Init'){
+        stage('Terraform Init'){
             steps{
                 script{
-                    sh 'terraform -chdir=./TerraformInfra init'
+                    withAWS(credentials: 'DevOpsLabs', region: 'us-east-1'){
+                       sh 'terraform -chdir=./TerraformInfra init'
+                    }
                 }
             }    
         }
