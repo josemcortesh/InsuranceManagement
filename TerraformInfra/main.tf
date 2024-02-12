@@ -1,3 +1,10 @@
+terraform {
+	backend "s3" {
+		bucket			= "terraform-state-jmch"
+		key			= "capstone-project"
+	}
+}
+
 provider "aws" {
 }
 
