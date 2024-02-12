@@ -49,7 +49,6 @@ resource "aws_instance" "WorkerEC2" {
 
 		#Update repos
 		sudo apt-get update
-		sudo apt-get dist-upgrade -y
 
 		#Install Docker
 		apt-cache policy docker-ce
@@ -62,6 +61,7 @@ resource "aws_instance" "WorkerEC2" {
 		sudo usermod -aG docker ansiuser
 		su - ansiuser
 
+		sudo apt-get dist-upgrade -y
 		sudo reboot
 	EOF
 
