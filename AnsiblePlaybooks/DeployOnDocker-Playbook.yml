@@ -4,7 +4,6 @@
   become: true
 
   tasks:  
-  - name: Pull image from DockerHub
   - name: Launch Docker container with the image built.
     community.docker.docker_container:
       name: insure-me
