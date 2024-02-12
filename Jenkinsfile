@@ -64,6 +64,17 @@ pipeline{
                 sh 'echo "The output has been collected in the workspace under path Code/Logs/package.log"'
             }
         }
+        stage('Build Docker Image'){
+            steps{
+                script{
+                    docker.withRegistry('https://hub.docker.com/','Dockerhub'){
+                        def NewImage = docker.build("insure-me:${env.BUILD_ID}")
+                        NewImage.push()
+                        NewImage.push('latest')
+                    }
+                }
+            }
+        }
 //        stage('Checkout Ansible Playbooks'){
 //            steps{
 //               checkout scmGit(branches: [[name: '*/main']],
