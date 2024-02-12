@@ -1,7 +1,7 @@
 pipeline{
     agent any
     tools{
-        maven 'Maven 3.9.6'
+        maven 'Maven Default'
     }
     stages{
         stage('Checkout Project'){
@@ -31,12 +31,12 @@ pipeline{
             steps{
                 script{
                     withAWS(credentials: 'DevOpsLabs', region: 'us-east-1'){
-                        sh 'terraform -chdir=./TerraformInfra apply -var-file="ansiblelab.tfvars" -auto-approve'
+                        sh 'terraform -chdir=./TerraformInfra destroy -var-file="ansiblelab.tfvars" -auto-approve'
                     }
                 }    
             }
         }
-        stage('Code Validation'){
+/*        stage('Code Validation'){
             steps{
                 sh 'mvn -V -f Code/pom.xml validate | tee ./Code/Logs/validation.log'
                 sh 'echo "The code validation has been completed"'
@@ -90,6 +90,6 @@ pipeline{
                     }
                 }
             }
-        }
+        }*/
     }
 }
