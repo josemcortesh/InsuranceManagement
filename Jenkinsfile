@@ -68,7 +68,7 @@ pipeline{
             steps{
                 script{
                     docker.withRegistry('https://hub.docker.com/','Dockerhub'){
-                        def NewImage = docker.build("insure-me:${env.BUILD_ID}")
+                        def NewImage = docker.build("josemcortesh/insure-me:${env.BUILD_ID}")
                         NewImage.push()
                         NewImage.push('latest')
                     }
