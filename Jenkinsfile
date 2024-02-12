@@ -31,7 +31,7 @@ pipeline{
             steps{
                 script{
                     withAWS(credentials: 'DevOpsLabs', region: 'us-east-1'){
-                        sh 'terraform -chdir=./TerraformInfra destroy -var-file="ansiblelab.tfvars" -auto-approve'
+                        sh 'terraform -chdir=./TerraformInfra apply -var-file="ansiblelab.tfvars" -auto-approve'
                     }
                 }    
             }
