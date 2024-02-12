@@ -61,6 +61,8 @@ resource "aws_instance" "WorkerEC2" {
 		#Allow current user (ansiuser) to run docker commands without sudo
 		sudo usermod -aG docker ansiuser
 		su - ansiuser
+
+		sudo reboot
 	EOF
 
 	tags = {
