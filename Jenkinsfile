@@ -38,7 +38,7 @@ pipeline{
                 }    
             }
         }
-        /*stage('Code Validation'){
+        stage('Code Validation'){
             steps{
                 sh 'mvn -V -f Code/pom.xml validate | tee ./Code/Logs/validation.log'
                 sh 'echo "The code validation has been completed"'
@@ -92,6 +92,6 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
     }
 }
