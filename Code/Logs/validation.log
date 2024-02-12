@@ -1,0 +1,20 @@
+[1mApache Maven 3.6.3[m
+Maven home: /usr/share/maven
+Java version: 17.0.9, vendor: Private Build, runtime: /usr/lib/jvm/java-17-openjdk-amd64
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "6.5.0-17-generic", arch: "amd64", family: "unix"
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective settings
+[[1;33mWARNING[m] Unrecognised tag: 'blocked' (position: START_TAG seen ...</url>\n      <blocked>... @164:16)  @ /usr/share/maven/conf/settings.xml, line 164, column 16
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------< [0;36mcom.project.insurance:insure-me[0;1m >-------------------[m
+[[1;34mINFO[m] [1mBuilding Insure-me 1.0[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  0.144 s
+[[1;34mINFO[m] Finished at: 2024-02-11T19:59:46-05:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
