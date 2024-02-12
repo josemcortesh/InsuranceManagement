@@ -1,7 +1,10 @@
 pipeline{
     agent any
+    tools{
+        maven 'Maven 3.9.6'
+    }
     stages{
-        stage('Checkout files'){
+        stage('Checkout Project'){
             steps{
                 checkout scmGit(branches: [[name: '*/test1']],
                 //extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'TerraformLab']],
@@ -31,6 +34,34 @@ pipeline{
                         sh 'terraform -chdir=./TerraformInfra apply -var-file="ansiblelab.tfvars" -auto-approve'
                     }
                 }    
+            }
+        }
+        stage('Code Validation'){
+            steps{
+                sh 'mvn -V -f source/pom.xml validate | tee ./Code/Logs/validation.log'
+                sh 'echo "The code validation has been completed'
+                sh 'echo "The output has been collected in the workspace under path Code/Logs/validation.log"
+            }
+        }
+        stage('Code Compilation'){
+            steps{
+            sh 'mvn -V -f source/pom.xml compile | tee ./Code/Logs/compilation.log'
+                sh 'echo "The code compilation has been completed'
+                sh 'echo "The output has been collected in the workspace under path Code/Logs/compilation.log"    
+            }
+        }
+        stage('Code Testing'){
+            steps{
+            sh 'mvn -V -f source/pom.xml test | tee ./Code/Logs/tests.log'
+                sh 'echo "The code testing has been completed'
+                sh 'echo "The output has been collected in the workspace under path Code/Logs/tests.log"    
+            }
+        }
+        stage('Code Packaging'){
+            steps{
+            sh 'mvn -V -f source/pom.xml package | tee ./Code/Logs/package.log'
+                sh 'echo "The code packaging has been completed'
+                sh 'echo "The output has been collected in the workspace under path Code/Logs/package.log"    
             }
         }
 //        stage('Checkout Ansible Playbooks'){
