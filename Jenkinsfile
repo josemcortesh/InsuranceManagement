@@ -6,7 +6,7 @@ pipeline{
     stages{
         stage('Checkout Project'){
             steps{
-                checkout scmGit(branches: [[name: '*/test1']],
+                checkout scmGit(branches: [[name: '*/testS3']],
                 //extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'TerraformLab']],
                 userRemoteConfigs: [[credentialsId: 'DevOpsGitHub', url: 'https://github.com/josemcortesh/InsuranceManagement.git']])
             }
