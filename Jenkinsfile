@@ -77,10 +77,10 @@ pipeline{
                     dir('./AnsiblePlaybooks') {
                         withAWS(credentials: 'DevOpsLabs') {
                             ansiblePlaybook credentialsId: 'AnsibleLabUser', installation: 'Ansible-Local', inventory: 'ansiworkers.aws_ec2.yml', playbook: 'DockerCleanUp-Playbook.yml'
-                            sh 'echo "this line confirms thea the second playbook has been executed"'
+                            sh 'echo "this line confirms thea the first playbook has been executed"'
                             
                             ansiblePlaybook credentialsId: 'AnsibleLabUser', installation: 'Ansible-Local', inventory: 'ansiworkers.aws_ec2.yml', playbook: 'DeployOnDocker-Playbook.yml'
-                            sh 'echo "This line confirms that the third playbook has been executed"'
+                            sh 'echo "This line confirms that the second playbook has been executed"'
                         }    
                     }
                 }
