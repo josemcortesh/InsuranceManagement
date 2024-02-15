@@ -1,7 +1,7 @@
 pipeline{
     agent any
     tools{
-        maven 'Maven 3.9.6'
+        maven 'Maven Default'
     }
     stages{
         stage('Terraform Init'){
