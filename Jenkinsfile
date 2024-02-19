@@ -8,7 +8,7 @@ pipeline{
             steps{
                 script{
                     withAWS(credentials: 'DevOpsLabs', region: 'us-east-1'){
-                       sh 'terraform -chdir=./TerraformInfra init'
+                       sh 'terraform -chdir=./TerraformInfra init -migrate-state'
                     }
                 }
             }    
