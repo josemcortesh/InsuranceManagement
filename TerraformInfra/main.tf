@@ -1,11 +1,16 @@
 terraform {
 	backend "s3" {
-		bucket			= "terraform-state-jmch"
-		key			= "capstone-project"
+		bucket				= "terraform-state-jmch"
+		key				= "capstone-project"
+		region				= "us-east-1"
+		shared_credentials_files	= ["~/.aws/credentials"]
 	}
 }
 
 provider "aws" {
+
+		region				= "us-east-1"
+		shared_credentials_files	= ["~/.aws/credentials"]
 }
 
 resource "aws_security_group" "SG_WORKER"{
